@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+
+// components
 import AppContainer from 'components/app/AppContainer.js';
 
 // style
