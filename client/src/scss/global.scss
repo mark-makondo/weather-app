@@ -1,0 +1,10 @@
+@import 'variables';
+@import 'functions';
+
+//** PUT ALL THE GLOBAL STYLES HERE **//
+
+@import 'init';
+@import 'globalResponsive';
+
+// node_modules imports
+@import 'antd/dist/antd.css';

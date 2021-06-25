@@ -1,0 +1,33 @@
+//** PARTIAL SCSS - PUT ALL THE CSS INITIAL HERE **//
+
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
+// font-family: 'Open Sans', sans-serif;
+$main: 'Open Sans', sans-serif;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: $main !important;
+}
+
+#root {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+}
+
+
+a {
+  text-decoration: none !important;
+  color: unset !important;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+}
