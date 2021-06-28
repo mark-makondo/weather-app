@@ -4,6 +4,7 @@ class Puppeteer {
   #pageOption = {
     waitUntil: 'networkidle0',
   };
+
   #browserOption = {
     headless: false,
     args: ['--start-maximized'],
@@ -17,10 +18,9 @@ class Puppeteer {
   start = async (URI) => {
     try {
       let pageOption = this.#pageOption;
-      let browser = this.browser;
       let browserOption = this.#browserOption;
 
-      browser = await puppeteer.launch(browserOption);
+      this.browser = await puppeteer.launch(browserOption);
 
       let page = await browser.pages();
 

@@ -1,0 +1,26 @@
+@import 'scss/variables';
+@import 'scss/functions';
+
+.weather {
+  @include setFlex(column, center, center);
+  width: 100%;
+  height: 100%;
+
+  &-container {
+    @include setFlex(column, center, center);
+
+    width: 70%;
+    height: 100%;
+
+    h1 {
+      margin-bottom: 1rem;
+    }
+  }
+
+  &__search {
+    @include setFlex(row, center, center);
+
+    flex-wrap: wrap;
+    text-align: center;
+  }
+}

@@ -4,11 +4,22 @@ exports.start = async (req, res) => {
   try {
     const URI = 'https://openweathermap.org/current';
 
-    const puppeteerService = new PuppeteerService();
+    const service = new PuppeteerService();
 
-    await puppeteerService.startBrowser(URI);
+    await service.startBrowser(URI);
 
-    // res.status(200).send(result);
+    res.sendStatus(200);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+exports.getApi = async (req, res) => {
+  try {
+    const service = new PuppeteerService();
+
+    await service.queryDOM();
+    // await puppeteerService.client.reset();
     res.sendStatus(200);
   } catch (error) {
     console.error(error);

@@ -1,10 +1,16 @@
 import React from 'react';
 
+// style
+import './app.scss';
+
+// components
+import WeatherContainer from 'components/weather/WeatherContainer';
+
 const App = () => {
   return (
     <div className="app">
       <div className="app-container">
-        <h1>Hello world</h1>
+        <WeatherContainer />
       </div>
     </div>
   );

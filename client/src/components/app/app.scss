@@ -1,8 +1,14 @@
-@import '/client/src/scss/variables';
-@import '/client/src/scss/functions';
+@import 'scss/variables';
+@import 'scss/functions';
 
 .app {
+  height: 100vh;
+  width: 100vw;
+  background: getColors(primary-bg);
   &-container {
+    @include setFlex(column, center, center);
+
     width: 100%;
+    height: 100%;
   }
 }
