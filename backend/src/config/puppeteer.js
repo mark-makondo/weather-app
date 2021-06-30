@@ -12,43 +12,81 @@ class Puppeteer {
   };
 
   constructor() {
-    this.browser = null;
+    // if already created instance - dont created again instead call previous instance #for singleton
+    if (Puppeteer.instance instanceof Puppeteer) {
+      return Puppeteer.instance;
+    }
+
+    // added singleton
+    this.puppeteerObject = {
+      browser: null,
+      page: null,
+      pages: [],
+      browsers: [],
+      users: [],
+    };
+
+    // cant modified the instance that created #for singleton
+    Object.freeze(this);
+
+    // global - key #for singleton
+    Puppeteer.instance = this;
+  }
+  get(key) {
+    return this.puppeteerObject[key];
   }
 
-  start = async (URI) => {
+  set(key, value) {
+    this.puppeteerObject[key] = value;
+  }
+
+  async start() {
     try {
-      let pageOption = this.#pageOption;
       let browserOption = this.#browserOption;
 
-      this.browser = await puppeteer.launch(browserOption);
+      const data = await puppeteer.launch(browserOption);
 
-      let page = await browser.pages();
-
-      await page[0].goto(URI, pageOption);
+      this.set('browser', data);
     } catch (error) {
       console.error(error);
     }
-  };
+  }
 
-  newPage = async (URI) => {
+  async setPage(URI) {
+    try {
+      let pageOption = this.#pageOption;
+
+      const browser = this.get('browser');
+
+      const page = await browser.pages();
+
+      await page[0].goto(URI, pageOption);
+
+      return page[0];
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async newPage(URI) {
     try {
       const pageOption = this.#pageOption;
 
-      const page = await this.browser.newPage()[0];
+      const page = await this.get('browser').newPage()[0];
 
       await page.goto(URI, pageOption);
     } catch (error) {
       console.error(error);
     }
-  };
+  }
 
-  reset = async () => {
+  async reset() {
     try {
-      await this.browser.close();
+      await this.get('browser').close();
     } catch (error) {
       console.error(error);
     }
-  };
+  }
 }
 
 module.exports = Puppeteer;

@@ -2,30 +2,47 @@ const Puppeteer = require('../config/puppeteer');
 
 class PuppeteerService {
   constructor() {
-    this.client = null;
+    this.puppeteer = new Puppeteer();
   }
 
-  startBrowser = async (URI) => {
+  async startBrowser() {
     try {
-      let puppeteer = new Puppeteer();
-
-      this.client = puppeteer;
-
-      await puppeteer.start(URI);
-      console.log(this.client);
+      await this.puppeteer.start();
     } catch (error) {
       console.error(error);
     }
-  };
+  }
 
-  queryDOM = async () => {
+  /**
+   * @param {URI} URI
+   * @returns Open Weather APIs
+   */
+  async queryDOM(URI) {
     try {
-      let { browser } = this.client;
-      console.log(browser);
+      let organizedData = [];
+
+      const page = await this.puppeteer.setPage(URI);
+
+      const sections = await page.$$('section#one section');
+      const sectionsLength = sections.length;
+
+      for (let i = 0; i < sectionsLength; i++) {
+        const title = await sections[i].$eval('h3', (title) => title.innerText);
+        const api = await sections[i].$$eval('.api', (apis) => apis.map((api) => api.innerText));
+        const params = await sections[i].$$eval('table tr', (rows) => rows.map((row) => row.innerText));
+
+        organizedData.push({
+          title,
+          api,
+          params,
+        });
+      }
+
+      return organizedData;
     } catch (error) {
       console.error(error);
     }
-  };
+  }
 }
 
 module.exports = PuppeteerService;
