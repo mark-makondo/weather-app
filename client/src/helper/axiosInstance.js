@@ -1,19 +1,23 @@
 import axios from 'axios';
 
 // config
-import { weather } from 'settings';
+import settings from '../settings';
 
-const { BASE_URI, API_KEY } = weather;
+const {
+  backend: { URI },
+  weather: { BASE_URI, API_KEY },
+} = settings;
 
 const axiosInstance = (history = null) => {
+  let baseURL = `${URI}/puppeteer`;
   const headers = {};
 
   const axiosInstance = axios.create({
-    baseURL: BASE_URI,
+    baseURL,
     headers,
-    params: {
-      appid: API_KEY,
-    },
+    // params: {
+    //   appid: API_KEY,
+    // },
   });
 
   axiosInstance.interceptors.response.use(

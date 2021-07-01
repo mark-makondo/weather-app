@@ -1,4 +1,4 @@
-const Config = {
+const Settings = {
   weather: {
     BASE_URI: 'https://api.openweathermap.org/data/2.5/weather',
     API_KEY: process.env.REACT_APP_WEATHER_API_KEY,
@@ -8,4 +8,4 @@ const Config = {
   },
 };
 
-export default Config;
+export default Settings;

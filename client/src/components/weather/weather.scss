@@ -6,11 +6,34 @@
   width: 100%;
   height: 100%;
 
+  .ant-spin {
+    position: static !important;
+    &-nested-loading {
+      width: 100%;
+    }
+
+    &-container {
+      height: 100vh !important;
+      width: 100%;
+    }
+
+    &-text {
+      color: white;
+      font-weight: bold !important;
+      text-shadow: unset !important;
+    }
+  }
+
+  .ant-select {
+    width: 9rem !important;
+  }
+
   &-container {
     @include setFlex(column, center, center);
 
     width: 70%;
     height: 100%;
+    margin: auto;
 
     h1 {
       margin-bottom: 1rem;

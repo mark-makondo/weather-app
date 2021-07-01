@@ -17,8 +17,10 @@ class PuppeteerService {
    * @param {URI} URI
    * @returns Open Weather APIs
    */
-  async queryDOM(URI) {
+  async queryDOM(URI, start = true) {
     try {
+      start && (await this.startBrowser());
+
       let organizedData = [];
 
       const page = await this.puppeteer.setPage(URI);

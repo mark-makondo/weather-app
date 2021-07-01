@@ -6,33 +6,54 @@ import './weather.scss';
 // antd
 import Input from 'antd/lib/input';
 import Select from 'antd/lib/select';
+import Spin from 'antd/lib/spin';
+import Layout from 'antd/lib/layout';
+
+import { LoadingOutlined } from '@ant-design/icons';
 
 const { Group, Search } = Input;
 const { Option } = Select;
+const { Content } = Layout;
 
-const Weather = ({ onSelect, data }) => {
+const Weather = ({ onSelect, openWeatherMethods, loading, onSearch, selected }) => {
   const OptionSelect = () => {
     return (
-      <Select defaultValue="Name" onChange={onSelect}>
-        {data.map((data, i) => (
-          <Option key={i} value={data.text}>
-            {data.text}
-          </Option>
-        ))}
+      <Select defaultValue="By city name" onSelect={onSelect}>
+        {openWeatherMethods &&
+          openWeatherMethods.map((data, i) => (
+            <Option key={i} value={data.title}>
+              {data.title}
+            </Option>
+          ))}
       </Select>
     );
   };
 
   return (
     <div className="weather">
-      <div className="weather-container">
-        <h1 style={{ color: 'white' }}>Weather Analyzer</h1>
+      <Spin
+        spinning={loading}
+        tip="Getting the methdods, please wait..."
+        style={{ width: '100%', height: '100%' }}
+        indicator={<LoadingOutlined style={{ color: 'white' }} />}
+        size="large"
+      >
+        <div className="weather-container">
+          <h1 style={{ color: 'white' }}>Weather Analyzer</h1>
 
-        <Group compact className="weather__search">
-          <OptionSelect />
-          <Search style={{ width: '70%' }} allowClear defaultValue="test" type="text"></Search>
-        </Group>
-      </div>
+          <Group compact className="weather__search">
+            <OptionSelect />
+            <Search
+              style={{ width: '70%' }}
+              allowClear
+              defaultValue="test"
+              type="text"
+              autoFocus
+              onSearch={onSearch}
+            ></Search>
+          </Group>
+        </div>
+      </Spin>
     </div>
   );
 };
