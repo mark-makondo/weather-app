@@ -18,6 +18,20 @@ app.use(express.json());
 app.use('/puppeteer', puppeteerRoutes);
 
 const sched = new Scheduler();
-sched.schedule();
+const task = sched.scheduleTask();
+
+app.get('/task/start', (req, res) => {
+  console.log('starting task...');
+  task.start();
+  console.log('done');
+  res.send('task start');
+});
+
+app.get('/task/stop', (req, res) => {
+  console.log('stopping task...');
+  task.stop();
+  console.log('done');
+  res.send('task stop');
+});
 
 app.listen(PORT, () => console.log(`Listening to PORT: ${PORT}`));
