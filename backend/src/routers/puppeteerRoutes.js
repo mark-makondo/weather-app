@@ -1,7 +1,7 @@
 const { Router } = require('express');
 
 // controllers
-const { scrapeApi, apis, specificApi } = require('../controllers/apiController');
+const { scrapeApi, apis } = require('../controllers/apiController');
 
 const router = Router();
 
