@@ -8,6 +8,7 @@ import Input from 'antd/lib/input';
 import Select from 'antd/lib/select';
 import Spin from 'antd/lib/spin';
 import Layout from 'antd/lib/layout';
+import Button from 'antd/lib/button';
 
 import { LoadingOutlined } from '@ant-design/icons';
 
@@ -15,7 +16,7 @@ const { Group, Search } = Input;
 const { Option } = Select;
 const { Content } = Layout;
 
-const Weather = ({ onSelect, openWeatherMethods, loading, onSearch, selected }) => {
+const Weather = ({ onSelect, openWeatherMethods, loading, onSearch, selected, onScrape, onDelete }) => {
   const OptionSelect = () => {
     return (
       <Select defaultValue="By city name" onSelect={onSelect}>
@@ -40,6 +41,9 @@ const Weather = ({ onSelect, openWeatherMethods, loading, onSearch, selected }) 
       >
         <div className="weather-container">
           <h1 style={{ color: 'white' }}>Weather Analyzer</h1>
+
+          <Button onClick={onScrape}>Scrape Weather API</Button>
+          <Button onClick={onDelete}>Delete Weather API</Button>
 
           <Group compact className="weather__search">
             <OptionSelect />

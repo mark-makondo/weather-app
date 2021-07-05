@@ -26,7 +26,31 @@ const WeatherContainer = () => {
     optional: [],
   });
 
-  const getScrapedData = useCallback(async () => {
+  // const getScrapedData = useCallback(async () => {
+  //   try {
+  //     if (openWeatherMethods) return;
+
+  //     setLoading(true);
+
+  //     const res = await axiosInstance().get('/scrape/open-weather/docs/api');
+
+  //     !!res && setOpenWeatherMethods(res.data);
+
+  //     setLoading(false);
+
+  //     console.log('RETURNED API METHODS', res.data);
+  //   } catch (error) {
+  //     console.error(error);
+  //     setLoading(false);
+  //   }
+  // }, [openWeatherMethods]);
+
+  // useEffect(() => {
+  //   getScrapedData();
+  //   return () => getScrapedData();
+  // }, [getScrapedData]);
+
+  const getScrapedData = async () => {
     try {
       if (openWeatherMethods) return;
 
@@ -43,12 +67,7 @@ const WeatherContainer = () => {
       console.error(error);
       setLoading(false);
     }
-  }, [openWeatherMethods]);
-
-  useEffect(() => {
-    getScrapedData();
-    return () => getScrapedData();
-  }, [getScrapedData]);
+  };
 
   useEffect(() => {
     if (!openWeatherMethods) return;
@@ -99,6 +118,11 @@ const WeatherContainer = () => {
     alert(res.data.coord);
   };
 
+  const onScrape = async () => {
+    await getScrapedData();
+  };
+
+  const onDelete = () => {};
   //#endregion
 
   return (
@@ -108,6 +132,8 @@ const WeatherContainer = () => {
       loading={loading}
       onSearch={onSearch}
       selected={selected}
+      onScrape={onScrape}
+      onDelete={onDelete}
     />
   );
 };

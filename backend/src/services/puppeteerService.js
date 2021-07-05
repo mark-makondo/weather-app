@@ -40,10 +40,45 @@ class PuppeteerService {
         });
       }
 
+      const data = this.dataOrganizer(organizedData);
+
       return organizedData;
     } catch (error) {
       console.error(error);
     }
+  }
+
+  /**
+   * Split required and optional from scraped innerText table with \t
+   *
+   * @param {Array} array
+   * @returns {Object} Formatted object to be save to database
+   */
+  dataOrganizer(array) {
+    let newData = [];
+
+    array.forEach((data) => {
+      let optionalParams = [];
+      let requiredParams = [];
+
+      data.params.forEach((param) => {
+        if (!param.includes('\t')) return;
+
+        const split = param.split('\t');
+
+        if (split.includes('required')) requiredParams.push(split);
+        else if (split.includes('optional')) optionalParams.push(split);
+      });
+
+      newData.push({
+        title: data.title,
+        api: data.api,
+        required: requiredParams,
+        optional: optionalParams,
+      });
+    });
+
+    return newData;
   }
 }
 

@@ -22,7 +22,7 @@ exports.getApi = async (req, res) => {
     const URI = OPEN_WEATHER_DOC;
     const service = new PuppeteerService();
 
-    const data = await service.queryDOM(URI);
+    const { organizedData, data } = await service.queryDOM(URI);
 
     await service.puppeteer.reset();
 
