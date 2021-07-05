@@ -1,12 +1,13 @@
 const { Router } = require('express');
 
 // controllers
-const { start, getApi } = require('../controllers/puppeteerController');
+const { scrapeApi, apis, specificApi } = require('../controllers/apiController');
 
 const router = Router();
 
 // puppeteer routes
-router.route('/start-browser').get(start);
-router.route('/scrape/open-weather/docs/api').get(getApi);
+router.route('/scrape/api/docs?:name').get(scrapeApi);
+router.route('/saved/apis').get(apis);
+router.route('/saved/specific-api?:id').get(apis);
 
 module.exports = router;

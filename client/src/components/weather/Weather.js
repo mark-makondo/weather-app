@@ -4,31 +4,12 @@ import React from 'react';
 import './weather.scss';
 
 // antd
-import Input from 'antd/lib/input';
-import Select from 'antd/lib/select';
 import Spin from 'antd/lib/spin';
-import Layout from 'antd/lib/layout';
+import Button from 'antd/lib/button';
 
 import { LoadingOutlined } from '@ant-design/icons';
 
-const { Group, Search } = Input;
-const { Option } = Select;
-const { Content } = Layout;
-
-const Weather = ({ onSelect, openWeatherMethods, loading, onSearch, selected }) => {
-  const OptionSelect = () => {
-    return (
-      <Select defaultValue="By city name" onSelect={onSelect}>
-        {openWeatherMethods &&
-          openWeatherMethods.map((data, i) => (
-            <Option key={i} value={data.title}>
-              {data.title}
-            </Option>
-          ))}
-      </Select>
-    );
-  };
-
+const Weather = ({ loading, onOpenWeatherScrape }) => {
   return (
     <div className="weather">
       <Spin
@@ -41,17 +22,7 @@ const Weather = ({ onSelect, openWeatherMethods, loading, onSearch, selected }) 
         <div className="weather-container">
           <h1 style={{ color: 'white' }}>Weather Analyzer</h1>
 
-          <Group compact className="weather__search">
-            <OptionSelect />
-            <Search
-              style={{ width: '70%' }}
-              allowClear
-              defaultValue="test"
-              type="text"
-              autoFocus
-              onSearch={onSearch}
-            ></Search>
-          </Group>
+          <Button onClick={onOpenWeatherScrape}>Scrape Weather API</Button>
         </div>
       </Spin>
     </div>
