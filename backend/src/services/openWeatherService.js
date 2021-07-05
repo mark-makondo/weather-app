@@ -3,7 +3,7 @@ const Puppeteer = require('../config/puppeteer');
 // model
 const ScrapedApi = require('../models/ScrapedApiModel');
 
-class PuppeteerService {
+class OpenWeatherService {
   constructor() {
     this.puppeteer = new Puppeteer();
     this.apis = ScrapedApi;
@@ -94,4 +94,4 @@ class PuppeteerService {
   }
 }
 
-module.exports = PuppeteerService;
+module.exports = OpenWeatherService;

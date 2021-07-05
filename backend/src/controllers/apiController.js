@@ -10,8 +10,6 @@ exports.scrapeApi = async (req, res) => {
   try {
     const { name } = req.query;
 
-    let data;
-
     switch (name) {
       case 'openWeather':
         const URI = OPEN_WEATHER_DOC;
