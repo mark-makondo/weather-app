@@ -1,8 +1,12 @@
 const Puppeteer = require('../config/puppeteer');
 
+// model
+const ScrapedApi = require('../models/ScrapedApiModel');
+
 class PuppeteerService {
   constructor() {
     this.puppeteer = new Puppeteer();
+    this.apis = ScrapedApi;
   }
 
   async startBrowser() {
@@ -42,7 +46,9 @@ class PuppeteerService {
 
       const data = this.dataOrganizer(organizedData);
 
-      return organizedData;
+      await this.saveToDb(data);
+
+      return data;
     } catch (error) {
       console.error(error);
     }
@@ -79,6 +85,12 @@ class PuppeteerService {
     });
 
     return newData;
+  }
+
+  async saveToDb(data) {
+    const scrapedApi = new ScrapedApi({ name: 'Open Weather', methods: data });
+
+    await scrapedApi.save().catch((err) => console.error(err));
   }
 }
 

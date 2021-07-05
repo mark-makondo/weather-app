@@ -5,8 +5,10 @@ const puppeteerRoutes = require('./routers/puppeteerRoutes');
 const cors = require('cors');
 const express = require('express');
 
+const Mongoose = require('./config/mongodb');
 const Scheduler = require('./config/scheduler');
 
+const mongoose = new Mongoose();
 const app = express();
 
 const PORT = process.env.PORT || 3001;
@@ -20,4 +22,4 @@ app.use('/puppeteer', puppeteerRoutes);
 const sched = new Scheduler();
 sched.schedule();
 
-app.listen(PORT, () => console.log(`Listening to PORT: ${PORT}`));
+mongoose.run(app, PORT);
