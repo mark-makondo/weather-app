@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { Popover, Select, Space, Form, Button } from 'antd';
 
 import './flowApp.scss';
+
+// assets
 import blankAppImage from '../../assets/blank-app.png';
 import locationAppImage from '../../assets/location-app.png';
 import weatherAppImage from '../../assets/weather-app.png';
@@ -23,8 +25,7 @@ const availableMethodsData = {
 
 const jsPlumb = new JsPlumb('diagram');
 
-const FlowApp = () => {
-  //
+const FlowApp = ({ onOpenWeatherScrape, loading }) => {
   const [methodsAvailable, setMethodsAvailable] = useState([]);
 
   const [firstAppForm] = Form.useForm();
@@ -125,6 +126,10 @@ const FlowApp = () => {
     <div className="flow_app">
       <Button type="primary" onClick={getDetails}>
         Get App Details
+      </Button>
+
+      <Button onClick={onOpenWeatherScrape} loading={loading}>
+        Scrape Weather API
       </Button>
       <div id="diagram">
         <div id="endpoint1" className="control">
