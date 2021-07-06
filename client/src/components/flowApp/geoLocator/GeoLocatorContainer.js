@@ -48,6 +48,7 @@ const GeoLocatorContainer = ({ setTriggerData }) => {
       setResult(formatData);
 
       // console.log(formatData);
+      console.log(result.data);
     } catch (error) {
       console.error(error);
       setLoading(false);

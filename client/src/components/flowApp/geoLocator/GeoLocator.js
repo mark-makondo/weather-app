@@ -8,7 +8,7 @@ const { Item } = Form;
 
 const GeoLocator = ({ onInputChange, onFetch, loading }) => {
   return (
-    <Item label="IP Address">
+    <Item label="IP Address" className="geolocator-params">
       <Input onChange={onInputChange} />
       <Button type="primary" onClick={onFetch} loading={loading} children={'Fetch'} />
     </Item>
