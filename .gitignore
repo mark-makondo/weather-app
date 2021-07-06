@@ -3,11 +3,13 @@
 # backend
 /backend/node_modules
 /backend/.env
+/backend/package-lock.json
 
 # client
 /client/node_modules
 /client/build
 /client/.env
+/client/package-lock.json
 
 # testing
 /coverage
