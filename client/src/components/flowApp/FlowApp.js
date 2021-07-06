@@ -1,15 +1,21 @@
 import React, { useState } from 'react';
-
-import { Popover, Select, Space, Form, Button } from 'antd';
-
 import './flowApp.scss';
+
+// antd
+import { Popover, Select, Space, Form, Button } from 'antd';
+import Input from 'antd/lib/input';
 
 // assets
 import blankAppImage from '../../assets/blank-app.png';
 import locationAppImage from '../../assets/location-app.png';
 import weatherAppImage from '../../assets/weather-app.png';
 
+// helper
 import JsPlumb from '../../helper/jsplumb';
+
+// sub components
+import GeoLocatorInputs from './geoLocator/GeoLocatorContainer';
+import OpenWeatherInputs from './openWeather/OpenWeatherContainer';
 
 const appImages = {
   '60e45ea77d7c08c83a79f65e': { imageSrc: locationAppImage },
@@ -28,12 +34,16 @@ const jsPlumb = new JsPlumb('diagram');
 
 const FlowApp = ({ onOpenWeatherScrape, loading, supportedApps }) => {
   const [methodsAvailable, setMethodsAvailable] = useState([]);
+  const [triggerData, setTriggerData] = useState(null);
+  const [selectedMethod, setSelectedMethod] = useState();
+
   console.log(supportedApps);
 
   const [firstAppForm] = Form.useForm();
   const [secondAppForm] = Form.useForm();
 
   const handleSelectAppChange = (value, formReference) => {
+    console.log(value);
     // const getAppMethods = availableMethodsData[value];
     // setMethodsAvailable(getAppMethods.data);
     const selectedMethod = supportedApps.filter((s) => s._id === value)[0].methods;
@@ -45,6 +55,7 @@ const FlowApp = ({ onOpenWeatherScrape, loading, supportedApps }) => {
       addJsPlumbEndPoint('endpoint1', 'Right', true);
     } else if (formReference === secondAppForm) {
       document.getElementById('secondAppImage').setAttribute('src', appImages[value].imageSrc);
+
       //adding endpoint for jsplumb
       addJsPlumbEndPoint('endpoint2', 'Left');
       jsPlumb.get('jsPlumbInstance').connect({
@@ -66,6 +77,13 @@ const FlowApp = ({ onOpenWeatherScrape, loading, supportedApps }) => {
   };
 
   const endPointContentOptions = (formReference) => {
+    console.log(selectedMethod);
+
+    const reference = () => {
+      if (formReference === firstAppForm) {
+      }
+    };
+
     return (
       <div className="endpoint_container" style={{ minWidth: '250px', width: '250px' }}>
         <Form form={formReference} layout="vertical">
@@ -79,12 +97,20 @@ const FlowApp = ({ onOpenWeatherScrape, loading, supportedApps }) => {
             </Form.Item>
 
             <Form.Item label="Select Method" name="methodSelected">
-              <Select>
+              <Select onChange={(value) => setSelectedMethod(value)}>
                 {methodsAvailable.map((value, i) => (
-                  <Select.Option key={i}>{value.title}</Select.Option>
+                  <Select.Option key={i} value={value.title}>
+                    {value.title}
+                  </Select.Option>
                 ))}
               </Select>
             </Form.Item>
+
+            {selectedMethod === 'By IP Address' ? (
+              <GeoLocatorInputs setTriggerData={setTriggerData} />
+            ) : (
+              <OpenWeatherInputs selectedMethod={selectedMethod} methodsAvailable={methodsAvailable} />
+            )}
           </Space>
         </Form>
       </div>
