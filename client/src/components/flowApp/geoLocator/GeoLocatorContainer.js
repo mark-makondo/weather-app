@@ -57,7 +57,15 @@ const GeoLocatorContainer = ({ setTriggerData }) => {
     setLoading(false);
   };
 
-  return <GeoLocator onInputChange={onInputChange} ipAddress={ipAddress} onFetch={onFetch} loading={loading} />;
+  return (
+    <GeoLocator
+      onInputChange={onInputChange}
+      ipAddress={ipAddress}
+      onFetch={onFetch}
+      loading={loading}
+      result={result}
+    />
+  );
 };
 
 export default GeoLocatorContainer;

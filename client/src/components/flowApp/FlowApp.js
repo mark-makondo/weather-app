@@ -46,12 +46,14 @@ const FlowApp = ({ onOpenWeatherScrape, loading, supportedApps }) => {
     formReference.setFieldsValue({ methodSelected: null });
 
     if (formReference === firstAppForm) {
+      setSelectedSourceMethod('');
       setSourceMethod(selectedMethod);
       document.getElementById('firstAppImage').setAttribute('src', appImages[value].imageSrc);
       //adding endpoint for jsplumb
       addJsPlumbEndPoint('endpoint1', 'Right', true);
       setEnableTargetAppSelection(true);
     } else if (formReference === secondAppForm) {
+      setSelectedTargetMethod('');
       setTargetMethod(selectedMethod);
       document.getElementById('secondAppImage').setAttribute('src', appImages[value].imageSrc);
 
@@ -59,12 +61,14 @@ const FlowApp = ({ onOpenWeatherScrape, loading, supportedApps }) => {
       addJsPlumbEndPoint('endpoint2', 'Left');
 
       jsPlumb.connectEndPoints('endpoint1', 'endpoint2');
+      // const test = jsPlumb.connect('endpoint1', 'endpoint2', parameters);
     }
   };
 
   const handleSelectMethod = (value, formReference) => {
     if (formReference === firstAppForm) {
       setSelectedSourceMethod(value);
+      // addJsPlumbEndPoint('endpoint1', 'Right', true, triggerData && triggerData);
     } else if (formReference === secondAppForm) {
       setSelectedTargetMethod(value);
     }
@@ -136,6 +140,8 @@ const FlowApp = ({ onOpenWeatherScrape, loading, supportedApps }) => {
               <OpenWeatherInputs
                 selectedMethod={formReference.getFieldValue('methodSelected')}
                 methodsAvailable={methods}
+                isSecondAppForm={true}
+                triggerData={triggerData}
               />
             )}
           </Space>

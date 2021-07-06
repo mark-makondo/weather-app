@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 // ui
 import OpenWeather from './OpenWeather';
 
-const OpenWeatherContainer = ({ selectedMethod, methodsAvailable }) => {
+const OpenWeatherContainer = ({ selectedMethod, methodsAvailable, isSecondAppForm = false, triggerData }) => {
   const [parameters, setParameters] = useState();
 
   useEffect(() => {
@@ -19,7 +19,14 @@ const OpenWeatherContainer = ({ selectedMethod, methodsAvailable }) => {
   };
 
   console.log(parameters);
-  return <OpenWeather parameters={parameters} onReqChange={onReqChange} />;
+  return (
+    <OpenWeather
+      parameters={parameters}
+      onReqChange={onReqChange}
+      isSecondAppForm={isSecondAppForm}
+      triggerData={triggerData}
+    />
+  );
 };
 
 export default OpenWeatherContainer;
