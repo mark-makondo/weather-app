@@ -1,0 +1,78 @@
+@import 'scss/variables';
+@import 'scss/functions';
+
+.flow_app {
+  @include setFlex(column, center, center);
+  width: 100%;
+  height: 100%;
+
+  button {
+    margin: 10px;
+  }
+
+  #diagram {
+    position: relative;
+    height: calc(100vh);
+    height: -webkit-calc(100% - 100px);
+    height: -moz-calc(100% - 100px);
+    width: calc(100vw - 40px);
+    border: 2px dotted gray;
+    margin: 20px;
+    padding: 10px;
+
+    & #endpoint1 {
+      top: 250px;
+      left: 250px;
+    }
+    & #endpoint2 {
+      top: 250px;
+      left: 700px;
+    }
+
+    & .control {
+      position: absolute;
+      height: 150px;
+      width: 150px;
+    }
+
+    & .img_holder {
+      border-radius: calc(150px / 2);
+      height: 150px;
+      width: 150px;
+
+      & img {
+        width: 100%;
+      }
+    }
+
+    & .img_holder:hover {
+      border-radius: calc(150px / 2);
+      display: inline-block;
+      position: relative;
+      box-shadow: 1px 2px 0px 10px rgba(243, 243, 243, 1);
+      -webkit-box-shadow: 1px 2px 0px 10px rgba(243, 243, 243, 1);
+      -moz-box-shadow: 1px 2px 0px 10px rgba(243, 243, 243, 1);
+    }
+  }
+
+  //for connectors and others properly sending to front
+  .window {
+    z-index: 20;
+  }
+
+  .jtk-connector {
+    z-index: 4;
+  }
+
+  .jtk-endpoint {
+    z-index: 5;
+  }
+
+  .jtk-overlay {
+    z-index: 6;
+  }
+
+  .control {
+    z-index: 7;
+  }
+}
