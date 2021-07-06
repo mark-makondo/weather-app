@@ -1,18 +1,23 @@
 import React, { useState } from 'react';
-
-import { Popover, Select, Space, Form, Button } from 'antd';
-
 import './flowApp.scss';
+
+// antd
+import { Popover, Select, Space, Form, Button } from 'antd';
+import Input from 'antd/lib/input';
 
 // assets
 import blankAppImage from '../../assets/blank-app.png';
 import locationAppImage from '../../assets/location-app.png';
 import weatherAppImage from '../../assets/weather-app.png';
 
+// helper
 import JsPlumb from '../../helper/jsplumb';
 
 // settings
 import settings from '../../settings';
+// sub components
+import GeoLocatorInputs from './geoLocator/GeoLocatorContainer';
+import OpenWeatherInputs from './openWeather/OpenWeatherContainer';
 
 const appImages = {
   '60e45ea77d7c08c83a79f65e': { imageSrc: locationAppImage },
@@ -42,6 +47,7 @@ const FlowApp = ({ onOpenWeatherScrape, loading, supportedApps }) => {
     } else if (formReference === secondAppForm) {
       setTargetMethod(selectedMethod);
       document.getElementById('secondAppImage').setAttribute('src', appImages[value].imageSrc);
+
       //adding endpoint for jsplumb
       addJsPlumbEndPoint('endpoint2', 'Left');
 
@@ -90,6 +96,12 @@ const FlowApp = ({ onOpenWeatherScrape, loading, supportedApps }) => {
                 ))}
               </Select>
             </Form.Item>
+
+            {/* {selectedMethod === 'By IP Address' ? (
+              <GeoLocatorInputs setTriggerData={setTriggerData} />
+            ) : (
+              <OpenWeatherInputs selectedMethod={selectedMethod} methodsAvailable={methodsAvailable} />
+            )} */}
           </Space>
         </Form>
       </div>

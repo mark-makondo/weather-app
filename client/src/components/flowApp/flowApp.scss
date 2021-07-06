@@ -79,3 +79,10 @@
     z-index: 7;
   }
 }
+
+// antd
+.endpoint_container {
+  .geolocator-params .ant-form-item-control-input-content {
+    display: flex;
+  }
+}
