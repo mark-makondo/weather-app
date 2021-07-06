@@ -21,11 +21,11 @@
     padding: 10px;
 
     & #endpoint1 {
-      top: 250px;
+      top: 200px;
       left: 250px;
     }
     & #endpoint2 {
-      top: 250px;
+      top: 200px;
       left: 700px;
     }
 
@@ -39,6 +39,9 @@
       border-radius: calc(150px / 2);
       height: 150px;
       width: 150px;
+      box-shadow: 1px 2px 0px 10px #fff;
+      -webkit-box-shadow: 1px 2px 0px 10px #fff;
+      -moz-box-shadow: 1px 2px 0px 10px #fff;
 
       & img {
         width: 100%;
@@ -49,9 +52,9 @@
       border-radius: calc(150px / 2);
       display: inline-block;
       position: relative;
-      box-shadow: 1px 2px 0px 10px rgba(243, 243, 243, 1);
-      -webkit-box-shadow: 1px 2px 0px 10px rgba(243, 243, 243, 1);
-      -moz-box-shadow: 1px 2px 0px 10px rgba(243, 243, 243, 1);
+      box-shadow: 1px 2px 0px 12px rgba(243, 243, 243, 1);
+      -webkit-box-shadow: 1px 2px 0px 12px rgba(243, 243, 243, 1);
+      -moz-box-shadow: 1px 2px 0px 12px rgba(243, 243, 243, 1);
     }
   }
 
