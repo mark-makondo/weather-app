@@ -81,6 +81,15 @@ class JsPlumb {
     return this.get('jsPlumbInstance').addEndpoint(elementId, endPointOptions);
   }
 
+  connectEndPoints(sourceId, targetId) {
+    return this.get('jsPlumbInstance').connect({
+      source: sourceId,
+      target: targetId,
+      detachable: false,
+      anchors: ['Right', 'Left'],
+    });
+  }
+
   removeAllEnpoints(elementId) {
     this.get('jsPlumbInstance').removeAllEndpoints(elementId);
   }
