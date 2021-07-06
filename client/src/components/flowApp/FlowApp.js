@@ -11,35 +11,40 @@ import weatherAppImage from '../../assets/weather-app.png';
 
 import JsPlumb from '../../helper/jsplumb';
 
-const availableAppsData = [
-  { key: 'geolocation', value: 'Geolocation' },
-  { key: 'open_weather', value: 'Open Weather' },
-];
-const availableMethodsData = {
-  geolocation: { data: ['Get Location Details'], imageSrc: locationAppImage },
-  open_weather: {
-    data: ['Get By City', 'Get By City ID', 'Get By Coordinates'],
-    imageSrc: weatherAppImage,
-  },
+const appImages = {
+  '60e45ea77d7c08c83a79f65e': { imageSrc: locationAppImage },
+  '60e459dbf66e1733407259cb': { imageSrc: weatherAppImage },
 };
+
+// const availableMethodsData = {
+//   geolocation: { data: ['Get Location Details'], imageSrc: locationAppImage },
+//   open_weather: {
+//     data: ['Get By City', 'Get By City ID', 'Get By Coordinates'],
+//     imageSrc: weatherAppImage,
+//   },
+// };
 
 const jsPlumb = new JsPlumb('diagram');
 
-const FlowApp = ({ onOpenWeatherScrape, loading }) => {
+const FlowApp = ({ onOpenWeatherScrape, loading, supportedApps }) => {
   const [methodsAvailable, setMethodsAvailable] = useState([]);
+  console.log(supportedApps);
 
   const [firstAppForm] = Form.useForm();
   const [secondAppForm] = Form.useForm();
 
   const handleSelectAppChange = (value, formReference) => {
-    const getAppMethods = availableMethodsData[value];
-    setMethodsAvailable(getAppMethods.data);
+    // const getAppMethods = availableMethodsData[value];
+    // setMethodsAvailable(getAppMethods.data);
+    const selectedMethod = supportedApps.filter((s) => s._id === value)[0].methods;
+    setMethodsAvailable(selectedMethod);
+    console.log(appImages[value], 'asdsa');
     if (formReference === firstAppForm) {
-      document.getElementById('firstAppImage').setAttribute('src', getAppMethods.imageSrc);
+      document.getElementById('firstAppImage').setAttribute('src', appImages[value].imageSrc);
       //adding endpoint for jsplumb
       addJsPlumbEndPoint('endpoint1', 'Right', true);
     } else if (formReference === secondAppForm) {
-      document.getElementById('secondAppImage').setAttribute('src', getAppMethods.imageSrc);
+      document.getElementById('secondAppImage').setAttribute('src', appImages[value].imageSrc);
       //adding endpoint for jsplumb
       addJsPlumbEndPoint('endpoint2', 'Left');
       jsPlumb.get('jsPlumbInstance').connect({
@@ -67,16 +72,16 @@ const FlowApp = ({ onOpenWeatherScrape, loading }) => {
           <Space direction="vertical" style={{ width: 'calc(100%)' }}>
             <Form.Item label="Select App" name="appSelected">
               <Select onChange={(value) => handleSelectAppChange(value, formReference)}>
-                {availableAppsData.map(({ key, value }) => (
-                  <Select.Option key={key}>{value}</Select.Option>
+                {supportedApps.map(({ _id, name }) => (
+                  <Select.Option key={_id}>{name}</Select.Option>
                 ))}
               </Select>
             </Form.Item>
 
             <Form.Item label="Select Method" name="methodSelected">
               <Select>
-                {methodsAvailable.map((value) => (
-                  <Select.Option key={value}>{value}</Select.Option>
+                {methodsAvailable.map((value, i) => (
+                  <Select.Option key={i}>{value.title}</Select.Option>
                 ))}
               </Select>
             </Form.Item>
@@ -100,8 +105,11 @@ const FlowApp = ({ onOpenWeatherScrape, loading }) => {
         : secondAppForm.getFieldValue('appSelected');
 
     if (currentAppSelected !== undefined) {
-      const getAppMethods = availableMethodsData[currentAppSelected];
-      setMethodsAvailable(getAppMethods.data);
+      // const getAppMethods = availableMethodsData[currentAppSelected];
+      // setMethodsAvailable(getAppMethods.data);
+
+      const selectedMethod = supportedApps.filter((s) => s._id === currentAppSelected)[0].methods;
+      setMethodsAvailable(selectedMethod);
     }
   };
 
