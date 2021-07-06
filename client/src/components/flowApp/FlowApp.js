@@ -61,12 +61,14 @@ const FlowApp = ({ onOpenWeatherScrape, loading, supportedApps }) => {
       addJsPlumbEndPoint('endpoint2', 'Left');
 
       jsPlumb.connectEndPoints('endpoint1', 'endpoint2');
+      // const test = jsPlumb.connect('endpoint1', 'endpoint2', parameters);
     }
   };
 
   const handleSelectMethod = (value, formReference) => {
     if (formReference === firstAppForm) {
       setSelectedSourceMethod(value);
+      // addJsPlumbEndPoint('endpoint1', 'Right', true, triggerData && triggerData);
     } else if (formReference === secondAppForm) {
       setSelectedTargetMethod(value);
     }
@@ -121,25 +123,27 @@ const FlowApp = ({ onOpenWeatherScrape, loading, supportedApps }) => {
             )}
 
             {/* for source not geolocation */}
-            {formReference === firstAppForm && selectedSourceMethod && selectedSourceMethod !== 'By IP Address' ? (
+            {formReference === firstAppForm && selectedSourceMethod && selectedSourceMethod !== 'By IP Address' && (
               <OpenWeatherInputs
                 selectedMethod={formReference.getFieldValue('methodSelected')}
                 methodsAvailable={methods}
               />
-            ) : null}
+            )}
 
             {/* for target app geolocation */}
-            {formReference === secondAppForm && selectedTargetMethod && selectedTargetMethod === 'By IP Address' ? (
+            {formReference === secondAppForm && selectedTargetMethod && selectedTargetMethod === 'By IP Address' && (
               <GeoLocatorInputs setTriggerData={setTriggerData} />
-            ) : null}
+            )}
 
             {/* for target app not geolocation */}
-            {formReference === secondAppForm && selectedTargetMethod && selectedTargetMethod !== 'By IP Address' ? (
+            {formReference === secondAppForm && selectedTargetMethod && selectedTargetMethod !== 'By IP Address' && (
               <OpenWeatherInputs
                 selectedMethod={formReference.getFieldValue('methodSelected')}
                 methodsAvailable={methods}
+                isSecondAppForm={true}
+                triggerData={triggerData}
               />
-            ) : null}
+            )}
           </Space>
         </Form>
       </div>
