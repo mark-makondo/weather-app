@@ -19,8 +19,8 @@ app.use(express.json());
 
 app.use('/puppeteer', puppeteerRoutes);
 
-const sched = new Scheduler();
-const task = sched.scheduleTask();
+// const sched = new Scheduler();
+// const task = sched.scheduleTask();
 
 app.get('/task/start', (req, res) => {
   console.log('starting task...');
