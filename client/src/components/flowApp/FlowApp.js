@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
-
-import { Popover, Select, Space, Form, Button } from 'antd';
-
 import './flowApp.scss';
+
+// antd
+import { Popover, Select, Space, Form, Button } from 'antd';
+import Input from 'antd/lib/input';
 
 // assets
 import blankAppImage from '../../assets/blank-app.png';
 import locationAppImage from '../../assets/location-app.png';
 import weatherAppImage from '../../assets/weather-app.png';
 
+// helper
 import JsPlumb from '../../helper/jsplumb';
+
+// sub components
+import GeoLocatorInputs from './geoLocator/GeoLocatorContainer';
 
 const appImages = {
   '60e45ea77d7c08c83a79f65e': { imageSrc: locationAppImage },
@@ -28,6 +33,8 @@ const jsPlumb = new JsPlumb('diagram');
 
 const FlowApp = ({ onOpenWeatherScrape, loading, supportedApps }) => {
   const [methodsAvailable, setMethodsAvailable] = useState([]);
+  const [triggerData, setTriggerData] = useState(null);
+
   console.log(supportedApps);
 
   const [firstAppForm] = Form.useForm();
@@ -45,6 +52,7 @@ const FlowApp = ({ onOpenWeatherScrape, loading, supportedApps }) => {
       addJsPlumbEndPoint('endpoint1', 'Right', true);
     } else if (formReference === secondAppForm) {
       document.getElementById('secondAppImage').setAttribute('src', appImages[value].imageSrc);
+
       //adding endpoint for jsplumb
       addJsPlumbEndPoint('endpoint2', 'Left');
       jsPlumb.get('jsPlumbInstance').connect({
@@ -85,6 +93,8 @@ const FlowApp = ({ onOpenWeatherScrape, loading, supportedApps }) => {
                 ))}
               </Select>
             </Form.Item>
+
+            <GeoLocatorInputs setTriggerData={setTriggerData} />
           </Space>
         </Form>
       </div>

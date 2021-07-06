@@ -76,3 +76,10 @@
     z-index: 7;
   }
 }
+
+// antd
+.endpoint_container {
+  .ant-form-item-control-input-content {
+    display: flex;
+  }
+}
