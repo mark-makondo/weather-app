@@ -32,11 +32,18 @@ const FlowApp = ({ onOpenWeatherScrape, loading, supportedApps }) => {
   const [params, setParams] = useState({});
   const [enableTargetAppSelection, setEnableTargetAppSelection] = useState(false);
 
+  // const [selectedMethod, setSelectedMethod] = useState();
+  const [selectedSourceMethod, setSelectedSourceMethod] = useState(null);
+  const [selectedTargetMethod, setSelectedTargetMethod] = useState(null);
+  const [triggerData, setTriggerData] = useState(null);
+
   const [firstAppForm] = Form.useForm();
   const [secondAppForm] = Form.useForm();
 
   const handleSelectAppChange = (value, formReference) => {
     const selectedMethod = supportedApps.filter((s) => s._id === value)[0].methods;
+
+    formReference.setFieldsValue({ methodSelected: null });
 
     if (formReference === firstAppForm) {
       setSourceMethod(selectedMethod);
@@ -56,24 +63,34 @@ const FlowApp = ({ onOpenWeatherScrape, loading, supportedApps }) => {
   };
 
   const handleSelectMethod = (value, formReference) => {
-    const methods = formReference === firstAppForm ? sourceMethod : targetMethod;
-    const selected = methods[value];
-    const apiUri = selected.api[0];
-    const baseUri = `http://${apiUri.split('?')[0]}?`;
-    for (const p of selected.required) {
-      if (p[0] !== 'appid') console.log(p[0], p[2]);
-      else
-        setParams((oldState) => {
-          return {
-            ...oldState,
-            appid: settings.weather.API_KEY,
-          };
-        });
+    if (formReference === firstAppForm) {
+      setSelectedSourceMethod(value);
+    } else if (formReference === secondAppForm) {
+      setSelectedTargetMethod(value);
     }
+
+    // const methods = formReference === firstAppForm ? sourceMethod : targetMethod;
+    // const selected = methods[value];
+    // setSelectedSourceMethod(value);
+    // console.log(formReference.getFieldValue('methodSelected'));
+    // setSelectedMethod(selected.title);
+    // const apiUri = selected.api[0];
+    // const baseUri = `http://${apiUri.split('?')[0]}?`;
+    // for (const p of selected.required) {
+    //   if (p[0] !== 'appid') console.log(p[0], p[2]);
+    //   else
+    //     setParams((oldState) => {
+    //       return {
+    //         ...oldState,
+    //         appid: settings.weather.API_KEY,
+    //       };
+    //     });
+    // }
   };
 
   const endPointContentOptions = (formReference) => {
     let methods = formReference === firstAppForm ? sourceMethod : targetMethod;
+
     return (
       <div className="endpoint_container" style={{ minWidth: '250px', width: '250px' }}>
         <Form form={formReference} layout="vertical">
@@ -88,20 +105,39 @@ const FlowApp = ({ onOpenWeatherScrape, loading, supportedApps }) => {
                 ))}
               </Select>
             </Form.Item>
-
             <Form.Item label="Select Method" name="methodSelected">
               <Select onChange={(value) => handleSelectMethod(value, formReference)}>
-                {methods.map((value, i) => (
-                  <Select.Option key={i}>{value.title}</Select.Option>
+                {methods.map((value) => (
+                  <Select.Option key={value.title}>{value.title}</Select.Option>
                 ))}
               </Select>
             </Form.Item>
 
-            {/* {selectedMethod === 'By IP Address' ? (
+            {/* for source app geolocation */}
+            {formReference === firstAppForm && selectedSourceMethod && selectedSourceMethod === 'By IP Address' && (
               <GeoLocatorInputs setTriggerData={setTriggerData} />
-            ) : (
-              <OpenWeatherInputs selectedMethod={selectedMethod} methodsAvailable={methodsAvailable} />
-            )} */}
+            )}
+
+            {/* for source not geolocation */}
+            {formReference === firstAppForm && selectedSourceMethod && selectedSourceMethod !== 'By IP Address' && (
+              <OpenWeatherInputs
+                selectedMethod={formReference.getFieldValue('methodSelected')}
+                methodsAvailable={methods}
+              />
+            )}
+
+            {/* for target app geolocation */}
+            {formReference === secondAppForm && selectedTargetMethod && selectedTargetMethod === 'By IP Address' && (
+              <GeoLocatorInputs setTriggerData={setTriggerData} />
+            )}
+
+            {/* for target app not geolocation */}
+            {formReference === secondAppForm && selectedTargetMethod && selectedTargetMethod !== 'By IP Address' && (
+              <OpenWeatherInputs
+                selectedMethod={formReference.getFieldValue('methodSelected')}
+                methodsAvailable={methods}
+              />
+            )}
           </Space>
         </Form>
       </div>
@@ -134,14 +170,6 @@ const FlowApp = ({ onOpenWeatherScrape, loading, supportedApps }) => {
   const addJsPlumbEndPoint = (elementId, anchor, isSource = false, parameters = {}) => {
     jsPlumb.addEndPoint(elementId, {
       anchor: anchor,
-      //   endpoint: 'Dot',
-      //   //   anchor: 'BottomCenter',
-      //   //   isTarget: true,
-      //   //   isSource: true,
-      //   isSource: isSource,
-      //   isTarget: !isSource,
-      //   parameters: parameters,
-      //   connectionType: 'connector-style',
     });
     //set draggable
     jsPlumb.setElementDraggable(elementId);
