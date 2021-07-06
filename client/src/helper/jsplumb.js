@@ -12,6 +12,10 @@ class JsPlumb {
   init(containerId) {
     const instance = jsPlumb.getInstance({
       Container: containerId,
+      PaintStyle: { stroke: '#c4c4c4', strokeWidth: 10, dashstyle: '2 2' },
+      Connector: ['Bezier', { curviness: 30 }],
+      Endpoint: ['Dot', { radius: 30 }],
+      EndpointStyle: { fill: '#c4c4c4' },
     });
     this.set('jsPlumbInstance', instance);
     // instance.registerConnectionTypes({
@@ -75,6 +79,15 @@ class JsPlumb {
    */
   addEndPoint(elementId, endPointOptions = {}) {
     return this.get('jsPlumbInstance').addEndpoint(elementId, endPointOptions);
+  }
+
+  connectEndPoints(sourceId, targetId) {
+    return this.get('jsPlumbInstance').connect({
+      source: sourceId,
+      target: targetId,
+      detachable: false,
+      anchors: ['Right', 'Left'],
+    });
   }
 
   removeAllEnpoints(elementId) {
