@@ -95,11 +95,6 @@ class AutomationService {
       const automationData = await this.model.create({ data });
 
       //for automation purpose
-
-      //run task immediately
-      const weatherResult = await this.apiRequest.fetchData(appResults[1].endpoint);
-      await this.resultService.add({ app: appResults[1].app, data: weatherResult });
-      console.log('[immediately] => Result successfully saved in DB...');
       //scheduled task
       const task = this.scheduler.scheduleTask(async () => {
         const weatherResult = await this.apiRequest.fetchData(appResults[1].endpoint);
