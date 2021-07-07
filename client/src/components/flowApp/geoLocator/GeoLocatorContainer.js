@@ -4,7 +4,7 @@ import axios from 'axios';
 // ui
 import GeoLocator from './GeoLocator';
 
-const GeoLocatorContainer = ({ setTriggerData }) => {
+const GeoLocatorContainer = ({ setTriggerData, formReference }) => {
   const [loading, setLoading] = useState(false);
 
   const [ipAddress, setIpAddress] = useState('');
@@ -48,7 +48,7 @@ const GeoLocatorContainer = ({ setTriggerData }) => {
       setResult(formatData);
 
       // console.log(formatData);
-      console.log(result.data);
+      // console.log(result.data);
     } catch (error) {
       console.error(error);
       setLoading(false);
@@ -64,6 +64,7 @@ const GeoLocatorContainer = ({ setTriggerData }) => {
       onFetch={onFetch}
       loading={loading}
       result={result}
+      formReference={formReference}
     />
   );
 };

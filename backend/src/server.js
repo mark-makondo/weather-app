@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const puppeteerRoutes = require('./routers/puppeteerRoutes');
+const automationRoutes = require('./routers/automationRoutes');
 
 const cors = require('cors');
 const express = require('express');
@@ -18,6 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use('/puppeteer', puppeteerRoutes);
+app.use('/automation', automationRoutes);
 
 // const sched = new Scheduler();
 // const task = sched.scheduleTask();

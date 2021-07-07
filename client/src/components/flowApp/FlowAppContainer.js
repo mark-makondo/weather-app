@@ -4,13 +4,15 @@ import FlowApp from './FlowApp';
 // helper
 import axiosInstance from 'helper/axiosInstance';
 
+import { message } from 'antd';
+
 const FlowAppContainer = () => {
   const [loading, setLoading] = useState(false);
   const [supportedApps, setSupportedApps] = useState([]);
 
   const getSupportedApps = async () => {
     const result = await axiosInstance()
-      .get('/saved/apis')
+      .get('/puppeteer/saved/apis')
       .catch((error) => console.log(error));
 
     setSupportedApps(result.data);
@@ -24,8 +26,20 @@ const FlowAppContainer = () => {
     try {
       setLoading(true);
 
-      await axiosInstance().get(`/scrape/api/docs?name=${api}`);
+      await axiosInstance().get(`/puppeteer/scrape/api/docs?name=${api}`);
 
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
+  };
+
+  const saveAutomation = async (data) => {
+    try {
+      setLoading(true);
+      await axiosInstance().post(`/automation/create`, { data });
+      message.success('automation successfully saved.');
       setLoading(false);
     } catch (error) {
       console.error(error);
@@ -40,7 +54,14 @@ const FlowAppContainer = () => {
     await scrapeApiDoc(api).catch((err) => console.error(err));
   };
 
-  return <FlowApp onOpenWeatherScrape={onOpenWeatherScrape} loading={loading} supportedApps={supportedApps} />;
+  return (
+    <FlowApp
+      onOpenWeatherScrape={onOpenWeatherScrape}
+      loading={loading}
+      supportedApps={supportedApps}
+      saveAutomation={saveAutomation}
+    />
+  );
 };
 
 export default FlowAppContainer;

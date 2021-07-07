@@ -9,7 +9,8 @@ const {
 } = settings;
 
 const axiosInstance = (history = null) => {
-  let baseURL = `${URI}/puppeteer`;
+  // let baseURL = `${URI}/puppeteer`;
+  let baseURL = `${URI}`;
   const headers = {};
 
   const axiosInstance = axios.create({
