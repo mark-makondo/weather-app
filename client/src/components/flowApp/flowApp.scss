@@ -36,6 +36,7 @@
     }
 
     & .img_holder {
+      position: relative;
       border-radius: calc(150px / 2);
       height: 150px;
       width: 150px;
@@ -45,6 +46,17 @@
 
       & img {
         width: 100%;
+        position: absolute;
+      }
+      & .startIndicatorImage {
+        position: absolute;
+        top: 65%;
+        height: 50px;
+        width: 50px;
+        border-radius: calc(60px / 2);
+        box-shadow: 0px 0px 0px 4px rgba(255, 255, 255, 0.7);
+        -webkit-box-shadow: 0px 0px 0px 4px rgba(255, 255, 255, 0.7);
+        -moz-box-shadow: 0px 0px 0px 4px rgba(255, 255, 255, 0.7);
       }
     }
 
