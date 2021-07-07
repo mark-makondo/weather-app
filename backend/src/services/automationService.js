@@ -54,7 +54,7 @@ class AutomationService {
                 } else {
                   //if parameters from frontend is array
                   if (Array.isArray(app.parameters)) {
-                    arrParameters.push(`${qParam.trim()}=${app.parameters[index].trim()}`);
+                    arrParameters.push(`${qParam.trim()}=${String(app.parameters[index]).trim()}`);
                   }
                 }
               }
