@@ -49,12 +49,12 @@ class AutomationService {
             for (let rawParams of methodRequiredParameters) {
               let params = rawParams[0].split(',');
               for (let [index, qParam] of params.entries()) {
-                if (qParam === 'appid') {
-                  arrParameters.push(`${qParam}=${settings.OPEN_WEATHER_API}`);
+                if (qParam.trim() === 'appid') {
+                  arrParameters.push(`${qParam.trim()}=${settings.OPEN_WEATHER_API}`);
                 } else {
                   //if parameters from frontend is array
                   if (Array.isArray(app.parameters)) {
-                    arrParameters.push(`${qParam}=${app.parameters[index]}`);
+                    arrParameters.push(`${qParam.trim()}=${app.parameters[index].trim()}`);
                   }
                 }
               }
@@ -68,8 +68,8 @@ class AutomationService {
           //
         } else if (apiName === 'Geolocator') {
           if (methodRequiredParameters) {
-            if (Array.isArray(app.parameters)) arrParameters.push(app.parameters[index]);
-            else arrParameters.push(app.parameters);
+            if (Array.isArray(app.parameters)) arrParameters.push(app.parameters[index].trim());
+            else arrParameters.push(app.parameters.trim());
           }
           const appApi = `${baseEndpoint}${arrParameters.join('/')}`;
           // appApiEndpoints.push(appApi);
