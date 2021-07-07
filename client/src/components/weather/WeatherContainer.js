@@ -21,7 +21,7 @@ const WeatherContainer = () => {
     try {
       setLoading(true);
 
-      await axiosInstance().get(`/scrape/api/docs?name=${api}`);
+      await axiosInstance().get(`/puppeteer/scrape/api/docs?name=${api}`);
 
       setLoading(false);
     } catch (error) {
@@ -33,7 +33,7 @@ const WeatherContainer = () => {
   const onOpenWeatherScrape = async () => {
     const api = 'openWeather';
 
-    console.log('clicked');
+    // console.log('clicked');
     await scrapeApiDoc(api).catch((err) => console.error(err));
   };
 
