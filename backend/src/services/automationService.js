@@ -1,6 +1,13 @@
 // model
 const AutomationModel = require('../models/AutomationModel');
+
+//services
 const ApiService = require('./apiService');
+const ResultService = require('./resultService');
+
+//config/helpers
+const ApiRequest = require('../config/apiRequest');
+const Scheduler = require('../config/scheduler');
 
 // const util = require('util');
 
@@ -12,27 +19,29 @@ class AutomationService {
     this.model = AutomationModel;
   }
 
+  //initialization
   apiService = new ApiService();
+  resultService = new ResultService();
+  apiRequest = new ApiRequest();
+  scheduler = new Scheduler();
 
   async add(data) {
     try {
       //manipulate data and add endpoint
 
+      // let appApiEndpoints = [];
+      let appResults = [];
       for (let app of data) {
         //get baseendpoint
         // const { name: apiName, baseEndpoint } = await this.apiService.getApis(app.appSelected)[0];
         const selectedApi = await this.apiService.getAppById(app.appSelected);
-        const { name: apiName, baseEndpoint } = selectedApi;
-        // const apiName = selectedApi[0].name;
-        // const baseEndpoint = selectedApi[0].baseUrl;
-        console.log(selectedApi, apiName, baseEndpoint);
+        let { name: apiName, baseEndpoint } = selectedApi;
 
         const selectedMethod = await this.apiService.getApiMethod(app.appSelected, app.methodSelected);
-        const methodEndpoint = selectedMethod.endpoint;
+        // const methodEndpoint = selectedMethod.endpoint;
         const methodRequiredParameters = selectedMethod.required;
 
         //if there is a required fields
-        let queryParameters = '';
         let arrParameters = [];
 
         if (apiName === 'Open Weather') {
@@ -51,13 +60,22 @@ class AutomationService {
               }
             }
           }
-          console.log(`${apiName} => ${baseEndpoint}${arrParameters.join('&')}`);
+          const appApi = `${baseEndpoint}${arrParameters.join('&')}`;
+          // appApiEndpoints.push(appApi);
+          appResults.push({ app: selectedApi._id, endpoint: appApi });
+          app['automation'] = appApi;
+          console.log(`${apiName} => ${appApi}`);
+          //
         } else if (apiName === 'Geolocator') {
           if (methodRequiredParameters) {
             if (Array.isArray(app.parameters)) arrParameters.push(app.parameters[index]);
             else arrParameters.push(app.parameters);
           }
-          console.log(`${apiName} => ${baseEndpoint}${arrParameters.join('/')}`);
+          const appApi = `${baseEndpoint}${arrParameters.join('/')}`;
+          // appApiEndpoints.push(appApi);
+          appResults.push({ app: selectedApi._id, endpoint: appApi });
+          app['automation'] = appApi;
+          console.log(`${apiName} => ${appApi}`);
         }
 
         // let test = '';
@@ -74,8 +92,30 @@ class AutomationService {
         // }
       }
 
-      return true;
-      // return await this.model.create({ data });
+      const automationData = await this.model.create({ data });
+
+      //for automation purpose
+
+      //run task immediately
+      const weatherResult = await this.apiRequest.fetchData(appResults[1].endpoint);
+      await this.resultService.add({ app: appResults[1].app, data: weatherResult });
+      console.log('[immediately] => Result successfully saved in DB...');
+      //scheduled task
+      const task = this.scheduler.scheduleTask(async () => {
+        const weatherResult = await this.apiRequest.fetchData(appResults[1].endpoint);
+        await this.resultService.add({ app: appResults[1].app, data: weatherResult });
+        console.log('[scheduled] => Result successfully saved in DB...');
+        // console.log('Weather result ', weatherResult);
+      });
+
+      if (!settings.TASKS.find((t) => t.id === 1)) {
+        settings.TASKS.push({ id: 1, task: task });
+      }
+
+      // settings.TASKS.push({ id: automationData._id, task: task });
+      //for automation purpose
+
+      return automationData;
     } catch (error) {
       console.error('error', error);
       return null;
