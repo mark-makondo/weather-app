@@ -33,7 +33,7 @@ const FlowApp = (props) => {
 
   const [sourceMethod, setSourceMethod] = useState([]);
   const [targetMethod, setTargetMethod] = useState([]);
-  const [params, setParams] = useState({});
+
   const [enableTargetAppSelection, setEnableTargetAppSelection] = useState(false);
 
   // const [selectedMethod, setSelectedMethod] = useState();
@@ -91,24 +91,7 @@ const FlowApp = (props) => {
     const selectedMethod = methods.find((s) => s.title === value);
     console.log(selectedMethod.endpoint);
     formReference.setFieldsValue({ methodEndpointSelected: selectedMethod?.endpoint });
-
-    // const methods = formReference === firstAppForm ? sourceMethod : targetMethod;
-    // const selected = methods[value];
-    // setSelectedSourceMethod(value);
-    // console.log(formReference.getFieldValue('methodSelected'));
-    // setSelectedMethod(selected.title);
-    // const apiUri = selected.api[0];
-    // const baseUri = `http://${apiUri.split('?')[0]}?`;
-    // for (const p of selected.required) {
-    //   if (p[0] !== 'appid') console.log(p[0], p[2]);
-    //   else
-    //     setParams((oldState) => {
-    //       return {
-    //         ...oldState,
-    //         appid: settings.weather.API_KEY,
-    //       };
-    //     });
-    // }
+    formReference.setFieldsValue({ requiredFields: selectedMethod?.required });
   };
 
   /**
@@ -146,10 +129,17 @@ const FlowApp = (props) => {
                 ))}
               </Select>
             </Form.Item>
-            {/* handling endpoint  */}
+
+            {/*             
             <Form.Item label="Select Method" name="methodEndpointSelected" hidden={true}>
               <Input />
             </Form.Item>
+
+            <Form.Item label="Select Method" name="requiredFields" hidden={true}>
+              <Input />
+            </Form.Item> 
+            */}
+
             {/* for source app geolocation */}
             {formReference === firstAppForm && selectedSourceMethod && selectedSourceMethod === 'By IP Address' && (
               <GeoLocatorInputs setTriggerData={setTriggerData} formReference={formReference} />
@@ -225,10 +215,6 @@ const FlowApp = (props) => {
     const data = [firstAppValues, secondAppValues];
     console.log(data);
     saveAutomation(data);
-
-    // console.log('test', firstAppValues, secondAppValues);
-    // console.log('firstAppValues', firstAppValues);
-    // console.log('secondAppValues', secondAppValues);
   };
 
   return (
