@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import './flowApp.scss';
 
 // antd
-import { Popover, Select, Space, Form, Button } from 'antd';
-import Input from 'antd/lib/input';
+import { Popover, Select, Space, Form, Button, Tooltip, Input } from 'antd';
+import { StopOutlined, PlayCircleOutlined } from '@ant-design/icons';
 
 // assets
 import blankAppImage from '../../assets/blank-app.png';
@@ -16,6 +16,7 @@ import JsPlumb from '../../helper/jsplumb';
 
 // settings
 import settings from '../../settings';
+
 // sub components
 import GeoLocatorInputs from './geoLocator/GeoLocatorContainer';
 import OpenWeatherInputs from './openWeather/OpenWeatherContainer';
@@ -29,7 +30,7 @@ const jsPlumb = new JsPlumb('diagram');
 
 const FlowApp = (props) => {
   //props
-  const { onOpenWeatherScrape, loading, supportedApps, saveAutomation } = props;
+  const { onOpenWeatherScrape, loading, supportedApps, saveAutomation, handleStartTask, handleStopTask } = props;
 
   const [sourceMethod, setSourceMethod] = useState([]);
   const [targetMethod, setTargetMethod] = useState([]);
@@ -230,6 +231,14 @@ const FlowApp = (props) => {
           <Button onClick={onOpenWeatherScrape} loading={loading}>
             Scrape Weather API
           </Button>
+
+          <Tooltip title="Start Current Task">
+            <Button type="primary" shape="circle" icon={<PlayCircleOutlined />} onClick={handleStartTask} />
+          </Tooltip>
+
+          <Tooltip title="Stop Current Task">
+            <Button type="primary" shape="circle" icon={<StopOutlined />} onClick={handleStopTask} />
+          </Tooltip>
         </Space>
       </div>
       <div id="diagram">
