@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './flowApp.scss';
 
 // antd
-import { Popover, Select, Space, Form, Button, Tooltip, Input } from 'antd';
+import { Popover, Select, Space, Form, Button, Tooltip, Input, Divider } from 'antd';
 import { StopOutlined, PlayCircleOutlined } from '@ant-design/icons';
 
 // assets
@@ -30,7 +30,15 @@ const jsPlumb = new JsPlumb('diagram');
 
 const FlowApp = (props) => {
   //props
-  const { onOpenWeatherScrape, loading, supportedApps, saveAutomation, handleStartTask, handleStopTask } = props;
+  const {
+    onOpenWeatherScrape,
+    loading,
+    supportedApps,
+    saveAutomation,
+    handleStartTask,
+    handleStopTask,
+    automationIds,
+  } = props;
 
   const [sourceMethod, setSourceMethod] = useState([]);
   const [targetMethod, setTargetMethod] = useState([]);
@@ -41,6 +49,8 @@ const FlowApp = (props) => {
   const [selectedSourceMethod, setSelectedSourceMethod] = useState(null);
   const [selectedTargetMethod, setSelectedTargetMethod] = useState(null);
   const [triggerData, setTriggerData] = useState(null);
+
+  const [selectedTask, setSelectedTask] = useState('');
 
   const [firstAppForm] = Form.useForm();
   const [secondAppForm] = Form.useForm();
@@ -90,7 +100,7 @@ const FlowApp = (props) => {
 
     const methods = formReference === firstAppForm ? sourceMethod : targetMethod;
     const selectedMethod = methods.find((s) => s.title === value);
-    console.log(selectedMethod.endpoint);
+    // console.log(selectedMethod.endpoint);
     formReference.setFieldsValue({ methodEndpointSelected: selectedMethod?.endpoint });
     formReference.setFieldsValue({ requiredFields: selectedMethod?.required });
   };
@@ -192,6 +202,11 @@ const FlowApp = (props) => {
 
   const handleSchedule = () => {};
 
+  const handleTaskChange = (value) => {
+    console.log(value);
+    setSelectedTask(value);
+  };
+
   /**
    * add endoint to jsplumb
    * @param {*} value
@@ -225,19 +240,37 @@ const FlowApp = (props) => {
           <Button type="dashed" onClick={handleSchedule} danger>
             Schedule Settings
           </Button>
+
           <Button type="primary" onClick={saveAutomationDetails}>
             Save Automation
           </Button>
           <Button onClick={onOpenWeatherScrape} loading={loading}>
             Scrape Weather API
           </Button>
+          <Divider type="vertical" />
+          <Select defaultValue={selectedTask} style={{ width: 280 }} onChange={handleTaskChange}>
+            {/* <Select.Option value="jack">Jack</Select.Option> */}
+            {automationIds.map((id) => (
+              <Select.Option key={id} value={id}>{`Task [${id}]`}</Select.Option>
+            ))}
+          </Select>
 
           <Tooltip title="Start Current Task">
-            <Button type="primary" shape="circle" icon={<PlayCircleOutlined />} onClick={handleStartTask} />
+            <Button
+              type="primary"
+              shape="circle"
+              icon={<PlayCircleOutlined />}
+              onClick={() => handleStartTask(selectedTask)}
+            />
           </Tooltip>
 
           <Tooltip title="Stop Current Task">
-            <Button type="primary" shape="circle" icon={<StopOutlined />} onClick={handleStopTask} />
+            <Button
+              type="primary"
+              shape="circle"
+              icon={<StopOutlined />}
+              onClick={() => handleStopTask(selectedTask)}
+            />
           </Tooltip>
         </Space>
       </div>
