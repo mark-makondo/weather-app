@@ -7,9 +7,25 @@ class ApiService {
   }
 
   async getApis(id = null) {
-    const apis = await this.apis.find(!!id ? { _id: id } : {}).catch((err) => console.error(err));
+    try {
+      const apis = await this.apis.find(!!id ? { _id: id } : {}).sort({ createdAt: -1 });
+      return apis;
+    } catch (error) {
+      console.error('error', error);
+      return null;
+    }
+  }
 
-    return apis;
+  async getApiEndPoint(appId, methodTitle) {
+    try {
+      const api = await this.apis.findById({ _id: appId });
+      console.log('api', api);
+      const selectedMethod = api.methods.find((m) => m.title === methodTitle);
+      return selectedMethod.endpoint;
+    } catch (error) {
+      console.error('error', error);
+      return null;
+    }
   }
 }
 

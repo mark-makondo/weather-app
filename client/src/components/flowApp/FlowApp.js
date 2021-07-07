@@ -9,6 +9,7 @@ import Input from 'antd/lib/input';
 import blankAppImage from '../../assets/blank-app.png';
 import locationAppImage from '../../assets/location-app.png';
 import weatherAppImage from '../../assets/weather-app.png';
+import startImage from '../../assets/start.png';
 
 // helper
 import JsPlumb from '../../helper/jsplumb';
@@ -26,7 +27,10 @@ const appImages = {
 
 const jsPlumb = new JsPlumb('diagram');
 
-const FlowApp = ({ onOpenWeatherScrape, loading, supportedApps }) => {
+const FlowApp = (props) => {
+  //props
+  const { onOpenWeatherScrape, loading, supportedApps, saveAutomation } = props;
+
   const [sourceMethod, setSourceMethod] = useState([]);
   const [targetMethod, setTargetMethod] = useState([]);
   const [params, setParams] = useState({});
@@ -40,18 +44,25 @@ const FlowApp = ({ onOpenWeatherScrape, loading, supportedApps }) => {
   const [firstAppForm] = Form.useForm();
   const [secondAppForm] = Form.useForm();
 
+  /**
+   * on selecting app
+   * @param {*} value
+   * @param {*} formReference
+   */
   const handleSelectAppChange = (value, formReference) => {
     const selectedMethod = supportedApps.filter((s) => s._id === value)[0].methods;
 
     formReference.setFieldsValue({ methodSelected: null });
 
     if (formReference === firstAppForm) {
+      setSelectedSourceMethod('');
       setSourceMethod(selectedMethod);
       document.getElementById('firstAppImage').setAttribute('src', appImages[value].imageSrc);
       //adding endpoint for jsplumb
       addJsPlumbEndPoint('endpoint1', 'Right', true);
       setEnableTargetAppSelection(true);
     } else if (formReference === secondAppForm) {
+      setSelectedTargetMethod('');
       setTargetMethod(selectedMethod);
       document.getElementById('secondAppImage').setAttribute('src', appImages[value].imageSrc);
 
@@ -59,15 +70,27 @@ const FlowApp = ({ onOpenWeatherScrape, loading, supportedApps }) => {
       addJsPlumbEndPoint('endpoint2', 'Left');
 
       jsPlumb.connectEndPoints('endpoint1', 'endpoint2');
+      // const test = jsPlumb.connect('endpoint1', 'endpoint2', parameters);
     }
   };
 
+  /**
+   * on selecting method
+   * @param {*} value
+   * @param {*} formReference
+   */
   const handleSelectMethod = (value, formReference) => {
     if (formReference === firstAppForm) {
       setSelectedSourceMethod(value);
+      // addJsPlumbEndPoint('endpoint1', 'Right', true, triggerData && triggerData);
     } else if (formReference === secondAppForm) {
       setSelectedTargetMethod(value);
     }
+
+    const methods = formReference === firstAppForm ? sourceMethod : targetMethod;
+    const selectedMethod = methods.find((s) => s.title === value);
+    console.log(selectedMethod.endpoint);
+    formReference.setFieldsValue({ methodEndpointSelected: selectedMethod?.endpoint });
 
     // const methods = formReference === firstAppForm ? sourceMethod : targetMethod;
     // const selected = methods[value];
@@ -88,12 +111,23 @@ const FlowApp = ({ onOpenWeatherScrape, loading, supportedApps }) => {
     // }
   };
 
+  /**
+   * creation of elements in an app details
+   * @param {*} value
+   * @param {*} formReference
+   */
   const endPointContentOptions = (formReference) => {
     let methods = formReference === firstAppForm ? sourceMethod : targetMethod;
 
     return (
       <div className="endpoint_container" style={{ minWidth: '250px', width: '250px' }}>
-        <Form form={formReference} layout="vertical">
+        <Form
+          form={formReference}
+          initialValues={{
+            endpoint: null,
+          }}
+          layout="vertical"
+        >
           <Space direction="vertical" style={{ width: 'calc(100%)' }}>
             <Form.Item label="Select App" name="appSelected">
               <Select
@@ -112,12 +146,14 @@ const FlowApp = ({ onOpenWeatherScrape, loading, supportedApps }) => {
                 ))}
               </Select>
             </Form.Item>
-
+            {/* handling endpoint  */}
+            <Form.Item label="Select Method" name="methodEndpointSelected" hidden={true}>
+              <Input />
+            </Form.Item>
             {/* for source app geolocation */}
             {formReference === firstAppForm && selectedSourceMethod && selectedSourceMethod === 'By IP Address' && (
-              <GeoLocatorInputs setTriggerData={setTriggerData} />
+              <GeoLocatorInputs setTriggerData={setTriggerData} formReference={formReference} />
             )}
-
             {/* for source not geolocation */}
             {formReference === firstAppForm && selectedSourceMethod && selectedSourceMethod !== 'By IP Address' && (
               <OpenWeatherInputs
@@ -125,17 +161,17 @@ const FlowApp = ({ onOpenWeatherScrape, loading, supportedApps }) => {
                 methodsAvailable={methods}
               />
             )}
-
             {/* for target app geolocation */}
             {formReference === secondAppForm && selectedTargetMethod && selectedTargetMethod === 'By IP Address' && (
-              <GeoLocatorInputs setTriggerData={setTriggerData} />
+              <GeoLocatorInputs setTriggerData={setTriggerData} formReference={formReference} />
             )}
-
             {/* for target app not geolocation */}
             {formReference === secondAppForm && selectedTargetMethod && selectedTargetMethod !== 'By IP Address' && (
               <OpenWeatherInputs
                 selectedMethod={formReference.getFieldValue('methodSelected')}
                 methodsAvailable={methods}
+                isSecondAppForm={true}
+                triggerData={triggerData}
               />
             )}
           </Space>
@@ -144,13 +180,11 @@ const FlowApp = ({ onOpenWeatherScrape, loading, supportedApps }) => {
     );
   };
 
-  const getDetails = () => {
-    const firstAppValues = firstAppForm.getFieldsValue();
-    const secondAppValues = secondAppForm.getFieldsValue();
-    console.log('firstAppValues', firstAppValues);
-    console.log('secondAppValues', secondAppValues);
-  };
-
+  /**
+   * on click of the app, popover will show - handle current method
+   * @param {*} value
+   * @param {*} formReference
+   */
   const handleLoadCurrentAppMethods = (formReference) => {
     const currentAppSelected =
       formReference === firstAppForm
@@ -167,12 +201,34 @@ const FlowApp = ({ onOpenWeatherScrape, loading, supportedApps }) => {
 
   const handleSchedule = () => {};
 
+  /**
+   * add endoint to jsplumb
+   * @param {*} value
+   * @param {*} formReference
+   */
   const addJsPlumbEndPoint = (elementId, anchor, isSource = false, parameters = {}) => {
     jsPlumb.addEndPoint(elementId, {
       anchor: anchor,
     });
     //set draggable
     jsPlumb.setElementDraggable(elementId);
+  };
+
+  /**
+   * on automation click get all data to save into database
+   * @param {*} value
+   * @param {*} formReference
+   */
+  const saveAutomationDetails = () => {
+    const firstAppValues = firstAppForm.getFieldsValue();
+    const secondAppValues = secondAppForm.getFieldsValue();
+    const data = [firstAppValues, secondAppValues];
+    console.log(data);
+    saveAutomation(data);
+
+    // console.log('test', firstAppValues, secondAppValues);
+    // console.log('firstAppValues', firstAppValues);
+    // console.log('secondAppValues', secondAppValues);
   };
 
   return (
@@ -182,7 +238,7 @@ const FlowApp = ({ onOpenWeatherScrape, loading, supportedApps }) => {
           <Button type="dashed" onClick={handleSchedule} danger>
             Schedule Settings
           </Button>
-          <Button type="primary" onClick={getDetails}>
+          <Button type="primary" onClick={saveAutomationDetails}>
             Save Automation
           </Button>
           <Button onClick={onOpenWeatherScrape} loading={loading}>
@@ -200,6 +256,7 @@ const FlowApp = ({ onOpenWeatherScrape, loading, supportedApps }) => {
           >
             <div className="img_holder">
               <img id="firstAppImage" src={blankAppImage} alt="Endpoint 1" />
+              <img className="startIndicatorImage" src={startImage} alt="Start" />
             </div>
           </Popover>
         </div>
