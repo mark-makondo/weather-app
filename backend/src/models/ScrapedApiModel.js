@@ -12,10 +12,15 @@ const ScrapedApiSchema = mongoose.Schema(
       required: true,
       trim: true,
     },
+    baseEndpoint: {
+      type: String,
+      required: true,
+      trim: true,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-module.exports = mongoose.model('scrapedApi', ScrapedApiSchema);
+module.exports = mongoose.model('scrapedapis', ScrapedApiSchema);

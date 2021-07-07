@@ -9,10 +9,11 @@ import Button from 'antd/lib/button';
 
 const { Item } = Form;
 const { Search } = Input;
-const GeoLocator = ({ onInputChange, onFetch, loading, result, formReference }) => {
+const GeoLocator = ({ onFetch, loading, result, formReference }) => {
   // const [ipAddr, setIpAddr] = useState('');
 
   const getCurrentIPAddress = () => {
+    // console.log('test');
     const url = 'https://api.ipify.org/?format=json';
     fetch(url)
       .then((response) => response.json())

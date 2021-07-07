@@ -5,12 +5,16 @@ const fetch = require('node-fetch');
 const EmailSender = require('../services/emailSender');
 
 class Scheduler {
-  scheduleTask() {
+  scheduleTask(callback = null) {
     //run every 10 seconds
-    return cron.schedule('*/10 * * * * *', async () => {
+    return cron.schedule('*/20 * * * * *', async () => {
       //run every 30 minues
       // cron.schedule('30 * * * * *', async () => {
+
       console.log('Running scheduler...');
+      if (callback) {
+        callback();
+      }
 
       // //fetch openweather result
       // const city = 'Manila';
