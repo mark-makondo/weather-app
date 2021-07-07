@@ -10,7 +10,7 @@ const OpenWeatherContainer = ({ selectedMethod, methodsAvailable, isSecondAppFor
     if (methodsAvailable.length === 0 || !!!methodsAvailable) return;
 
     const params = methodsAvailable.filter((method) => method.title === selectedMethod)[0];
-    console.log(methodsAvailable);
+    // console.log(methodsAvailable);
     setParameters(params);
   }, [selectedMethod, methodsAvailable]);
 
@@ -18,7 +18,7 @@ const OpenWeatherContainer = ({ selectedMethod, methodsAvailable, isSecondAppFor
     // console.log(e.target.name);
   };
 
-  console.log(parameters);
+  // console.log(parameters);
   return (
     <OpenWeather
       parameters={parameters}
