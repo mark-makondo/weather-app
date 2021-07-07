@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './flowApp.scss';
 
 // antd
-import { Popover, Select, Space, Form, Button, Tooltip, Input, Divider } from 'antd';
+import { Popover, Select, Space, Form, Button, Tooltip, Divider } from 'antd';
 import { StopOutlined, PlayCircleOutlined } from '@ant-design/icons';
 
 // assets
@@ -13,9 +13,6 @@ import startImage from '../../assets/start.png';
 
 // helper
 import JsPlumb from '../../helper/jsplumb';
-
-// settings
-import settings from '../../settings';
 
 // sub components
 import GeoLocatorInputs from './geoLocator/GeoLocatorContainer';
@@ -237,40 +234,43 @@ const FlowApp = (props) => {
     <div className="flow_app">
       <div>
         <Space align={'center'} style={{ width: 'calc(100%)' }}>
-          <Button type="dashed" onClick={handleSchedule} danger>
+          {/* <Button type="dashed" onClick={handleSchedule} danger>
             Schedule Settings
-          </Button>
+          </Button> */}
 
           <Button type="primary" onClick={saveAutomationDetails}>
             Save Automation
           </Button>
-          <Button onClick={onOpenWeatherScrape} loading={loading}>
+          <Button type="primary" onClick={onOpenWeatherScrape} loading={loading} danger>
             Scrape Weather API
           </Button>
           <Divider type="vertical" />
-          <Select defaultValue={selectedTask} style={{ width: 280 }} onChange={handleTaskChange}>
+          <Select
+            showSearch
+            style={{ width: 280 }}
+            placeholder="Select task..."
+            optionFilterProp="children"
+            filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+            onChange={handleTaskChange}
+          >
             {/* <Select.Option value="jack">Jack</Select.Option> */}
             {automationIds.map((id) => (
               <Select.Option key={id} value={id}>{`Task [${id}]`}</Select.Option>
             ))}
           </Select>
 
-          <Tooltip title="Start Current Task">
+          <Tooltip title="Start Task">
             <Button
               type="primary"
               shape="circle"
               icon={<PlayCircleOutlined />}
               onClick={() => handleStartTask(selectedTask)}
+              ghost
             />
           </Tooltip>
 
-          <Tooltip title="Stop Current Task">
-            <Button
-              type="primary"
-              shape="circle"
-              icon={<StopOutlined />}
-              onClick={() => handleStopTask(selectedTask)}
-            />
+          <Tooltip title="Stop Task">
+            <Button shape="circle" icon={<StopOutlined />} onClick={() => handleStopTask(selectedTask)} danger />
           </Tooltip>
         </Space>
       </div>

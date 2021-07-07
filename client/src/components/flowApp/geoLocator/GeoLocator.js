@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 //helper
 import { capitalize } from 'helper/functions';
 
 import Form from 'antd/lib/form';
 import Input from 'antd/lib/input';
-import Button from 'antd/lib/button';
 
 const { Item } = Form;
 const { Search } = Input;
 const GeoLocator = ({ onFetch, loading, result, formReference }) => {
-  // const [ipAddr, setIpAddr] = useState('');
-
+  //
   const getCurrentIPAddress = () => {
     // console.log('test');
     // const url = 'https://api.ipify.org/?format=json';
@@ -27,6 +25,7 @@ const GeoLocator = ({ onFetch, loading, result, formReference }) => {
 
   useEffect(() => {
     getCurrentIPAddress();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
