@@ -14,7 +14,6 @@ const FlowAppContainer = () => {
     const result = await axiosInstance()
       .get('/puppeteer/saved/apis')
       .catch((error) => console.log(error));
-
     setSupportedApps(result.data);
   };
 
@@ -54,12 +53,31 @@ const FlowAppContainer = () => {
     await scrapeApiDoc(api).catch((err) => console.error(err));
   };
 
+  const handleStartTask = () => {
+    axiosInstance()
+      .get('/task/start')
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((error) => console.log(error));
+  };
+  const handleStopTask = () => {
+    axiosInstance()
+      .get('/task/stop')
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((error) => console.log(error));
+  };
+
   return (
     <FlowApp
       onOpenWeatherScrape={onOpenWeatherScrape}
       loading={loading}
       supportedApps={supportedApps}
       saveAutomation={saveAutomation}
+      handleStartTask={handleStartTask}
+      handleStopTask={handleStopTask}
     />
   );
 };
