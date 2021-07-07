@@ -62,7 +62,7 @@ class AutomationService {
           }
           const appApi = `${baseEndpoint}${arrParameters.join('&')}`;
           // appApiEndpoints.push(appApi);
-          appResults.push({ app: selectedApi._id, endpoint: appApi });
+          appResults.push({ app: selectedApi._id, methodUsed: app.methodSelected, endpoint: appApi });
           app['automation'] = appApi;
           console.log(`${apiName} => ${appApi}`);
           //
@@ -73,7 +73,7 @@ class AutomationService {
           }
           const appApi = `${baseEndpoint}${arrParameters.join('/')}`;
           // appApiEndpoints.push(appApi);
-          appResults.push({ app: selectedApi._id, endpoint: appApi });
+          appResults.push({ app: selectedApi._id, methodUsed: app.methodSelected, endpoint: appApi });
           app['automation'] = appApi;
           console.log(`${apiName} => ${appApi}`);
         }
@@ -98,7 +98,11 @@ class AutomationService {
       //scheduled task
       const task = this.scheduler.scheduleTask(async () => {
         const weatherResult = await this.apiRequest.fetchData(appResults[1].endpoint);
-        await this.resultService.add({ app: appResults[1].app, data: weatherResult });
+        await this.resultService.add({
+          app: appResults[1].app,
+          methodUsed: appResults[1].methodUsed,
+          data: weatherResult,
+        });
         console.log('[scheduled] => Result successfully saved in DB...');
         // console.log('Weather result ', weatherResult);
       });
