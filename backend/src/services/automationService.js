@@ -112,7 +112,7 @@ class AutomationService {
           methodUsed: appResults[1].methodUsed,
           data: weatherResult,
         });
-        console.log('[scheduled] => Result successfully saved in DB...');
+        console.log(`Scheduled Task : [${selectedAutomation._id}] => Result successfully saved in DB...`);
         // console.log('Weather result ', weatherResult);
       });
 
@@ -120,14 +120,50 @@ class AutomationService {
         settings.TASKS.push({ id: automationData._id, task: task });
         // console.log(`task added [${automationData._id}]`, settings.TASKS);
       }
-
-      // settings.TASKS.push({ id: automationData._id, task: task });
       //for automation purpose
 
       return automationData;
     } catch (error) {
       console.error('error', error);
       return null;
+    }
+  }
+
+  async getById(id) {
+    try {
+      const result = await this.model.findById(id);
+      return result;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async startAutomationTask(automationId) {
+    try {
+      const selectedAutomation = await this.getById(automationId);
+      if (selectedAutomation) {
+        //
+        const task = this.scheduler.scheduleTask(async () => {
+          const weatherResult = await this.apiRequest.fetchData(selectedAutomation.data[1].automation);
+          const data = {
+            app: selectedAutomation.data[1].appSelected,
+            methodUsed: selectedAutomation.data[1].methodSelected,
+            data: weatherResult,
+          };
+
+          // console.log('startAutomationTask', data);
+          const automationTask = await this.resultService.add(data);
+          console.log(`Scheduled Task : [${selectedAutomation._id}] => Result successfully saved in DB...`);
+        });
+
+        if (settings.TASKS.filter((t) => t.id === selectedAutomation._id).length === 0) {
+          settings.TASKS.push({ id: selectedAutomation._id, task: task });
+          console.log(`Task [${selectedAutomation._id}] added on schedule.`);
+        }
+      }
+      return selectedAutomation;
+    } catch (error) {
+      console.log(error);
     }
   }
 }
