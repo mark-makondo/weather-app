@@ -88,7 +88,11 @@ class OpenWeatherService {
   }
 
   async saveToDb(data) {
-    const scrapedApi = new ScrapedApi({ name: 'Open Weather', methods: data });
+    const scrapedApi = new ScrapedApi({
+      name: 'Open Weather',
+      methods: data,
+      baseEndpoint: 'http://api.openweathermap.org/data/2.5/weather?',
+    });
 
     await scrapedApi.save().catch((err) => console.error(err));
   }
