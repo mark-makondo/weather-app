@@ -73,6 +73,7 @@ const FlowAppContainer = () => {
       .get('/task/start', { params })
       .then((res) => {
         console.log(res);
+        message.success(`[${res.data.id}] : ${res.data.msg}`);
       })
       .catch((error) => console.log(error));
   };
@@ -83,6 +84,7 @@ const FlowAppContainer = () => {
       .get('/task/stop', { params })
       .then((res) => {
         console.log(res);
+        message.success(`[${res.data.id}] : ${res.data.msg}`);
       })
       .catch((error) => console.log(error));
   };
