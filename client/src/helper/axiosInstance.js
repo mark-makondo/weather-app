@@ -5,7 +5,7 @@ import settings from '../settings';
 
 const {
   backend: { URI },
-  weather: { BASE_URI, API_KEY },
+  // weather: { BASE_URI, API_KEY },
 } = settings;
 
 const axiosInstance = (history = null) => {
