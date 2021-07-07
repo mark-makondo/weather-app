@@ -11,7 +11,6 @@ class Scheduler {
       //run every 30 minues
       // cron.schedule('30 * * * * *', async () => {
 
-      console.log('Running scheduler...');
       if (callback) {
         callback();
       }
