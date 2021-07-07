@@ -70,7 +70,7 @@ const FlowAppContainer = () => {
   const handleStartTask = (id) => {
     const params = { id };
     axiosInstance()
-      .get('/task/start', { params })
+      .get('/automation/task/start', { params })
       .then((res) => {
         console.log(res);
         message.success(`[${res.data.id}] : ${res.data.msg}`);
@@ -81,7 +81,7 @@ const FlowAppContainer = () => {
   const handleStopTask = (id) => {
     const params = { id };
     axiosInstance()
-      .get('/task/stop', { params })
+      .get('/automation/task/stop', { params })
       .then((res) => {
         console.log(res);
         message.success(`[${res.data.id}] : ${res.data.msg}`);
