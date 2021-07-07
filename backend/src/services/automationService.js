@@ -25,6 +25,15 @@ class AutomationService {
   apiRequest = new ApiRequest();
   scheduler = new Scheduler();
 
+  async getAll() {
+    try {
+      const result = await this.model.find({});
+      return result;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async add(data) {
     try {
       //manipulate data and add endpoint
@@ -98,7 +107,7 @@ class AutomationService {
       //scheduled task
       const task = this.scheduler.scheduleTask(async () => {
         const weatherResult = await this.apiRequest.fetchData(appResults[1].endpoint);
-        await this.resultService.add({
+        const automationTask = await this.resultService.add({
           app: appResults[1].app,
           methodUsed: appResults[1].methodUsed,
           data: weatherResult,
@@ -107,8 +116,9 @@ class AutomationService {
         // console.log('Weather result ', weatherResult);
       });
 
-      if (!settings.TASKS.find((t) => t.id === 1)) {
-        settings.TASKS.push({ id: 1, task: task });
+      if (settings.TASKS.filter((t) => t.id === automationData._id).length === 0) {
+        settings.TASKS.push({ id: automationData._id, task: task });
+        // console.log(`task added [${automationData._id}]`, settings.TASKS);
       }
 
       // settings.TASKS.push({ id: automationData._id, task: task });

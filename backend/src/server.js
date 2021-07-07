@@ -28,24 +28,38 @@ app.use('/automation', automationRoutes);
 // const task = sched.scheduleTask();
 
 app.get('/task/start', (req, res) => {
-  console.log('starting task again...');
+  const { id } = req.query;
   // task.start();
   if (settings.TASKS.length > 0) {
-    settings.TASKS[0].task.start();
-    console.log('done');
-    res.send('task start');
+    console.log('starting task again...');
+    const currentTask = settings.TASKS.filter((t) => t.id == id)[0];
+    // console.log(id, currentTask, settings.TASKS);
+    if (currentTask) {
+      currentTask.task.start();
+      console.log('task started');
+      res.status(200).send({ msg: 'task started', id });
+    } else {
+      res.status(200).send({ msg: 'task not found on the list' });
+    }
   } else {
     console.log('no running task');
-    res.send('no running task to start');
+    res.status(200).send('no running task to start');
   }
 });
 
 app.get('/task/stop', (req, res) => {
+  const { id } = req.query;
   console.log('stopping task...');
-  // task.stop();
-  settings.TASKS[0].task.stop();
-  console.log('done');
-  res.send('task stop');
+  // // task.stop();
+  const currentTask = settings.TASKS.filter((t) => t.id == id)[0];
+  // console.log(id, currentTask, settings.TASKS);
+  if (currentTask) {
+    currentTask.task.stop();
+    console.log('task stop');
+    res.status(200).send({ msg: 'task stop', id });
+  } else {
+    res.status(200).send({ msg: 'task not found on the list' });
+  }
 });
 
 mongoose.run(app, PORT);

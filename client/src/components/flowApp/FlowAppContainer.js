@@ -9,6 +9,7 @@ import { message } from 'antd';
 const FlowAppContainer = () => {
   const [loading, setLoading] = useState(false);
   const [supportedApps, setSupportedApps] = useState([]);
+  const [automationIds, setAutomationIds] = useState([]);
 
   const getSupportedApps = async () => {
     const result = await axiosInstance()
@@ -19,6 +20,7 @@ const FlowAppContainer = () => {
 
   useEffect(() => {
     getSupportedApps();
+    fetchAutomations();
   }, []);
 
   const scrapeApiDoc = async (api) => {
@@ -37,7 +39,8 @@ const FlowAppContainer = () => {
   const saveAutomation = async (data) => {
     try {
       setLoading(true);
-      await axiosInstance().post(`/automation/create`, { data });
+      const result = await axiosInstance().post(`/automation/create`, { data });
+      setAutomationIds((oldState) => [...oldState, result.data._id]);
       message.success('automation successfully saved.');
       setLoading(false);
     } catch (error) {
@@ -53,19 +56,35 @@ const FlowAppContainer = () => {
     await scrapeApiDoc(api).catch((err) => console.error(err));
   };
 
-  const handleStartTask = () => {
+  //automation
+  const fetchAutomations = () => {
     axiosInstance()
-      .get('/task/start')
+      .get('/automation/getAll')
       .then((res) => {
-        console.log(res);
+        console.log(res.data.map((a) => a._id));
+        setAutomationIds(res.data.map((a) => a._id));
       })
       .catch((error) => console.log(error));
   };
-  const handleStopTask = () => {
+
+  const handleStartTask = (id) => {
+    const params = { id };
     axiosInstance()
-      .get('/task/stop')
+      .get('/task/start', { params })
       .then((res) => {
         console.log(res);
+        message.success(`[${res.data.id}] : ${res.data.msg}`);
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const handleStopTask = (id) => {
+    const params = { id };
+    axiosInstance()
+      .get('/task/stop', { params })
+      .then((res) => {
+        console.log(res);
+        message.success(`[${res.data.id}] : ${res.data.msg}`);
       })
       .catch((error) => console.log(error));
   };
@@ -78,6 +97,7 @@ const FlowAppContainer = () => {
       saveAutomation={saveAutomation}
       handleStartTask={handleStartTask}
       handleStopTask={handleStopTask}
+      automationIds={automationIds}
     />
   );
 };
