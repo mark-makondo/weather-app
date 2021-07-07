@@ -14,7 +14,8 @@ const GeoLocator = ({ onFetch, loading, result, formReference }) => {
 
   const getCurrentIPAddress = () => {
     // console.log('test');
-    const url = 'https://api.ipify.org/?format=json';
+    // const url = 'https://api.ipify.org/?format=json';
+    const url = 'https://ip.seeip.org/jsonip?'; //https://ip4.seeip.org/json
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
