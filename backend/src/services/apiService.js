@@ -16,12 +16,26 @@ class ApiService {
     }
   }
 
-  async getApiEndPoint(appId, methodTitle) {
+  async getAppById(_id) {
+    try {
+      return await this.apis.findById({ _id });
+    } catch (error) {
+      console.error('error', error);
+      return null;
+    }
+  }
+
+  /**
+   *
+   * @param {*} appId
+   * @param {*} methodTitle
+   * @returns
+   */
+  async getApiMethod(appId, methodTitle) {
     try {
       const api = await this.apis.findById({ _id: appId });
-      console.log('api', api);
       const selectedMethod = api.methods.find((m) => m.title === methodTitle);
-      return selectedMethod.endpoint;
+      return selectedMethod;
     } catch (error) {
       console.error('error', error);
       return null;
