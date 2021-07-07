@@ -37,7 +37,7 @@ const GeoLocatorContainer = ({ setTriggerData, formReference }) => {
       if (!result.data) return;
 
       // const { city, latitude, longitude } = result.data;
-      const { city, lat: latitude, lon: longitude, zip } = result.data;
+      const { city, lat: latitude, lon: longitude, zip, countryCode } = result.data;
 
       // cant find city id and zip code
 
@@ -45,7 +45,7 @@ const GeoLocatorContainer = ({ setTriggerData, formReference }) => {
         city,
         latitude,
         longitude,
-        zip,
+        zip: `${zip},${countryCode}`,
       };
 
       // use this to pass data from trigger to action
