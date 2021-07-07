@@ -49,12 +49,12 @@ class AutomationService {
             for (let rawParams of methodRequiredParameters) {
               let params = rawParams[0].split(',');
               for (let [index, qParam] of params.entries()) {
-                if (qParam === 'appid') {
-                  arrParameters.push(`${qParam}=${settings.OPEN_WEATHER_API}`);
+                if (qParam.trim() === 'appid') {
+                  arrParameters.push(`${qParam.trim()}=${settings.OPEN_WEATHER_API}`);
                 } else {
                   //if parameters from frontend is array
                   if (Array.isArray(app.parameters)) {
-                    arrParameters.push(`${qParam}=${app.parameters[index]}`);
+                    arrParameters.push(`${qParam.trim()}=${app.parameters[index].trim()}`);
                   }
                 }
               }
@@ -62,18 +62,18 @@ class AutomationService {
           }
           const appApi = `${baseEndpoint}${arrParameters.join('&')}`;
           // appApiEndpoints.push(appApi);
-          appResults.push({ app: selectedApi._id, endpoint: appApi });
+          appResults.push({ app: selectedApi._id, methodUsed: app.methodSelected, endpoint: appApi });
           app['automation'] = appApi;
           console.log(`${apiName} => ${appApi}`);
           //
         } else if (apiName === 'Geolocator') {
           if (methodRequiredParameters) {
-            if (Array.isArray(app.parameters)) arrParameters.push(app.parameters[index]);
-            else arrParameters.push(app.parameters);
+            if (Array.isArray(app.parameters)) arrParameters.push(app.parameters[index].trim());
+            else arrParameters.push(app.parameters.trim());
           }
           const appApi = `${baseEndpoint}${arrParameters.join('/')}`;
           // appApiEndpoints.push(appApi);
-          appResults.push({ app: selectedApi._id, endpoint: appApi });
+          appResults.push({ app: selectedApi._id, methodUsed: app.methodSelected, endpoint: appApi });
           app['automation'] = appApi;
           console.log(`${apiName} => ${appApi}`);
         }
@@ -98,7 +98,11 @@ class AutomationService {
       //scheduled task
       const task = this.scheduler.scheduleTask(async () => {
         const weatherResult = await this.apiRequest.fetchData(appResults[1].endpoint);
-        await this.resultService.add({ app: appResults[1].app, data: weatherResult });
+        await this.resultService.add({
+          app: appResults[1].app,
+          methodUsed: appResults[1].methodUsed,
+          data: weatherResult,
+        });
         console.log('[scheduled] => Result successfully saved in DB...');
         // console.log('Weather result ', weatherResult);
       });

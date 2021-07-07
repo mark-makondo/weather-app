@@ -5,9 +5,9 @@ class ResultService {
   constructor() {
     this.model = ResultModel;
   }
-  async add({ app, data }) {
+  async add({ app, methodUsed, data }) {
     try {
-      return await this.model.create({ app, data });
+      return await this.model.create({ app, methodUsed, data });
     } catch (error) {
       console.log(error);
     }
